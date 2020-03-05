@@ -1,4 +1,7 @@
 <?php
+if (!isset($_COOKIE['logdin'])) {
+    header("Location: index.php");
+}
 $host = '127.0.0.1';
 $db   = 'netland';
 $user = 'root';
@@ -18,17 +21,16 @@ try {
 }
 echo $pdo->query('select version()')->fetchColumn();
 
-$gebruikersnaam = $_POST['gebruikersnaam'];
-$wachtwoord = $_POST['wachtwoord'];
-$sql = "select* from security.gebruikers";
-$stnt = $pdo->prepare($sql);
-$stnt->execute();
-$array = $stnt->fetch(PDO::FETCH_OBJ);
-if ($array->gebruikersnaam == $gebruikersnaam && $array->wachtwoord == $wachtwoord) {
-    echo '<h1>succes</h1>';
-    setcookie('logdin', $array->id);
-} else {
-    echo '<h1>niggah you fake</h1>';
-}
+
+$stmt = $pdo->query('SELECT * FROM netland.media;');
+while ($row = $stmt->fetch()) {
+    echo "<br/>" . $row['title'] . "<a href='media.php?id=" . $row['id'] . "'>edit info</a>";
+}  
 ?>
-<a href="mediaindex.php">media</a>
+<html>
+
+<form action="mediaadd.php" method="get">
+    <input type="submit" name="submit">
+</form>
+
+</html>
